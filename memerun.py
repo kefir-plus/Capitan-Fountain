@@ -1,42 +1,23 @@
-############################################################################################
-###                                                                                      ###
-### PyGame with a troll faced guy flying over an alien land trying to escape Zombies     ###
-###                                                                                      ###
-### Author: SUHAS SG                                                                     ###
-### jargnar@gmail.com                                                                    ###
-###                                                                                      ###
-### suhased.wordpress.com                                                                ###
-### twitter: @jargnar                                                                    ### 
-### facebook: facebook.com/jargnar                                                       ###
-###                                                                                      ###
-###                                                                                      ###
-### Disclaimer: The kelvinized font is not mine and I found it on the internet.          ###
-### All the other images are mine.                                                       ###
-###                                                                                      ###
-### Do Enjoy the game!                                                                   ###
-### You need to have Python and PyGame installed to run it.                              ###
-###                                                                                      ###
-### Run it by typing "python memerun.py" in the terminal                                 ###
-###                                                                                      ###
-###                                                                                      ###
-############################################################################################
-
+# -*- coding: utf-8 -*-
 import sys,random,pygame
 from collections import deque
 
-pygame.init()
+pygame.init()		#инициальзация
 
-textcolor = 255,205,125
-size = width, height = 800, 600
+textcolor = 0,0,0		#цвет текста
+size = width, height = 800, 600		#размер окна
 screen = pygame.display.set_mode(size)
-pygame.display.set_caption("memeRun by Suhas")
+pygame.display.set_caption("Капитан-фонтан")		#заголовок окна
 
 class tree:
 	'Doc: Class Tree represents the Physical Tree/Zombie and properties'
 	def __init__(self):
-		self.img = pygame.image.load("res/tree.png")
+		self.img = pygame.image.load("res/enemy.png")
 		self.rect = self.img.get_rect()
-		self.rect = self.rect.move(730,305)
+		ty = random.random()
+		ty = ty * 500
+		self.rect = self.rect.move(730,ty)
+		spawn = self.rect
 	def get_rectangle(self):
 		return self.rect
 	def left(self): 
@@ -52,7 +33,7 @@ class tree:
 	def move(self,x,y):
 		self.rect = self.rect.move(x,y)
 
-bg = pygame.image.load("res/memebg.png")
+bg = pygame.image.load("res/fonr.jpg")
 bgrect = bg.get_rect()
 screen.blit(bg,bgrect)
 
@@ -95,35 +76,47 @@ def gameover(x,y):
 
 def begin():
 
+	#Мой код
+	########
+	font = pygame.font.Font("res/font.ttf",18)
+	########
+
 	#init some important vars and load some images
 	score = 0
 	timer = 32
 	trees = deque()
 	trees.append(tree())
 
-	meme = pygame.image.load("res/meme.png")
+	meme = pygame.image.load("res/fonman.png")
 	mrect = meme.get_rect()
-	mrect = mrect.move(200,330)
+	mrect = mrect.move(200,230)
 
-	leg3 = pygame.image.load("res/leg3.png")
-	legs = pygame.image.load("res/legs.png")
-	lr3 = leg3.get_rect()
-	lrect = legs.get_rect()
-	lr3 = lr3.move(200,350)
-	lrect = lrect.move(160,350)
 
-	myfont = pygame.font.Font("res/Kelvinized.ttf",18)
 	#end of init-ing some important vars and loading some images
+
+	#Мой код
+	########
+	building = pygame.image.load("res/b.png")
+	bx = 200
+	by = 264
+	########
 
 	while 1:
 		for event in pygame.event.get():
 			if event.type==pygame.QUIT: sys.exit()
 		screen.blit(bg,bgrect)
 		
+		#Мой код
+		########
+		bx = bx - 5
+		if bx <= - 400: bx = 800
+		screen.blit(building, (bx, by))
+		########
+
 		#render the scoreboard
 		if pygame.time.get_ticks()%200: score = score + 1
 		scoreline = "DISTANCE: "+str(score)
-		scoreboard = myfont.render(scoreline,1,textcolor)
+		scoreboard = font.render(scoreline,1,textcolor)
 		
 		screen.blit(scoreboard,scoreboard.get_rect())
 		
@@ -143,24 +136,16 @@ def begin():
 		
 		#jump for sometime if up key is pressed
 		if pressed[pygame.K_UP]:
-			if timer < 25:
-				screen.blit(meme,mrect)
-				screen.blit(legs,lrect)
-			if timer >= 25 and timer <  170:
-				mrect = mrect.move(30,-90)
-				lr3 = lr3.move(30,-90)
-				screen.blit(meme,mrect)
-				screen.blit(leg3,lr3)
-				moved = 1
-
-			elif timer >= 160:
-				timer = 5
-				screen.blit(meme,mrect)
-				screen.blit(legs,lrect)
-			
+			mrect = mrect.move(0,-5)
+			screen.blit(meme,mrect)
+			moved = 0
+		if pressed[pygame.K_DOWN]:
+			mrect = mrect.move(0,5)
+			screen.blit(meme,mrect)
+			moved = 0
 		else:
 			screen.blit(meme,mrect)
-			screen.blit(legs,lrect)
+
 		
 		#death condition 
 		for Tree in trees:
@@ -177,13 +162,10 @@ def begin():
 					gameover(x[0],x[1])
 	
 		if moved == 1:
-			mrect = mrect.move(-30,90)
-			lr3 = lr3.move(-30,90)
+			mrect = mrect.move(-31,90)
 			timer = timer + 1
 
 		if timer <= 25: timer = timer + 1
-		
-
 		pygame.display.flip()	
 
 
@@ -192,7 +174,6 @@ def main():
 	#draw the welcome screen
 	welcome = pygame.image.load("res/welcome.png")
 	wrect = welcome.get_rect()
-	wrect = wrect.move(40,40)
 
 	#wait till the user presses "enter" key
 	while 1:
